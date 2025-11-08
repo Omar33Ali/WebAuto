@@ -64,8 +64,8 @@ public class OrangeHRMTests extends TestBase {
         // Navigate to Contact Details
         homePage.navigateToContactDetails();
         // fill Contact Details form
-        String workEmail = "mostafaa9" + homePage.randomString(2) + ".qc@company.com";
-        String otherEmail = "mostafaa23" + homePage.randomString(2) + ".qc@company.com";
+        String workEmail = "mostaf9" + homePage.randomString(2) + ".qc@company.com";
+        String otherEmail = "mostaf23" + homePage.randomString(2) + ".qc@company.com";
         contactDetailsPage.fillContactDetailsForm(
                 generateStreet(), generateStreet(),
                 testData.get("city").toString(), testData.get("state").toString(),

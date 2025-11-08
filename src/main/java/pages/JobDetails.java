@@ -12,7 +12,7 @@ import java.time.format.DateTimeFormatter;
 
     public class JobDetails extends PageBase {
 
-        String dateStr = "2015-15-06";
+        String dateStr = "2016-15-08";
 
         By joinedDateInput = By.xpath("//label[text()='Joined Date']/following::input[1]");
         By jobTitleDdl = By.xpath("(//div[contains(@class, 'oxd-select-text--active')])[1]");
@@ -29,7 +29,7 @@ import java.time.format.DateTimeFormatter;
         }
 
         public void fillJobDetails() {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyy-dd-MM");
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-dd-MM");
             String today = LocalDate.now().format(formatter);
             String endDate = LocalDate.now().plusYears(1).format(formatter);
 

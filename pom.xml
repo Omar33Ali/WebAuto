@@ -57,11 +57,6 @@
                 <groupId>io.qameta.allure</groupId>
                 <artifactId>allure-maven</artifactId>
                 <version>2.11.2</version>
-            </plugin>
-            <plugin>
-                <groupId>io.qameta.allure</groupId>
-                <artifactId>allure-maven</artifactId>
-                <version>2.11.2</version>
                 <configuration>
                     <resultsDirectory>D:\WebAut\allure-results</resultsDirectory>
                 </configuration>
