@@ -1,5 +1,6 @@
 package testPackage;
 import base.TestBase;
+import io.qameta.allure.*;
 import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
 import pages.Api;
@@ -11,7 +12,8 @@ import java.awt.*;
 import java.util.List;
 import static base.PageBase.generateStreet;
 
-
+@Epic("Search Functionality")
+@Feature("OrangeHRM Employee Management")
 public class OrangeHRMTests extends TestBase {
 
     HomePage homePage;
@@ -21,6 +23,9 @@ public class OrangeHRMTests extends TestBase {
     ContactDetailsPage contactDetailsPage;
     JobDetails jobDetails;
 
+
+    @Story("Add new employee via API, update data, verify in UI, fill Contact Details and Job Details forms")
+    @Description("Add new employee via API, update data, verify in UI, fill Contact Details and Job Details forms.")
     @Test()
     public void orangeHRMTest() throws AWTException, InterruptedException {
         homePage = new HomePage(driver);
@@ -30,21 +35,32 @@ public class OrangeHRMTests extends TestBase {
         contactDetailsPage = new ContactDetailsPage(driver);
         jobDetails = new JobDetails(driver);
 
+
         // Perform login
         String userName = (String) testData.get("userName");
         String passWord = (String) testData.get("passWord");
         homePage.login(userName, passWord);
+        Allure.step("Login performed with username: " + userName);
+        Allure.step("Login performed with password: " + passWord);
+
         // Add new employee using API and extract IDs
         List<String> data = api.extractIds(api.addNewEmployeeUsingApi());
         String empId = data.getFirst();
         String employeeId = data.getLast();
+        Allure.step("New employee added via API with EmpID: " + empId + " and EmployeeID: " + employeeId);
+
         // Update employee data using API
         api.updateEmployeeDataUsingApi(empId, employeeId);
+        Allure.step("Employee data updated via API for EmpID: " + empId + " and EmployeeID: " + employeeId);
+
         // Click on PIM button
         homePage.clickPimButton();
+        Allure.step("Clicked on PIM button");
         // Verify updated employee data in UI
         homePage.searchByEmployeeId(employeeId);
         homePage.clickSearchButton();
+        Allure.step("Searched for employee with EmployeeID: " + employeeId);
+
         // Navigate to Contact Details
         homePage.navigateToContactDetails();
         // fill Contact Details form
@@ -58,6 +74,8 @@ public class OrangeHRMTests extends TestBase {
                 workEmail, otherEmail
         );
         contactDetailsPage.clickSaveChangestButton();
+        Allure.step("Saved changes in Contact Details form");
+
         String expectedMessageUpdatedData = "Successfully Updated";
         softAssert.assertEquals(contactDetailsPage.getToastMessage(), expectedMessageUpdatedData, "Toast message for updated data mismatch!");
         // Add Attachment
@@ -70,8 +88,11 @@ public class OrangeHRMTests extends TestBase {
 
         // click on Job Tab
         homePage.clickJobTab();
+        Allure.step("Clicked on Job Tab");
         // fill Job Details form
         jobDetails.fillJobDetails();
+        Allure.step("Filled Job Details form");
+        Allure.step("Saved changes in Job Details form");
         softAssert.assertEquals(contactDetailsPage.getToastMessage(), expectedMessageUpdatedData, "Toast message for updated data mismatch!");
         softAssert.assertAll();
 
