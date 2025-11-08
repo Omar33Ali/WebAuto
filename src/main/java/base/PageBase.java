@@ -1,16 +1,17 @@
 package pages;
-
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.FluentWait;
+import org.openqa.selenium.support.ui.Wait;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.time.Duration;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
-
+import java.awt.*;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
+import java.awt.event.KeyEvent;
 public class PageBase {
 
     protected WebDriver driver;
@@ -39,9 +40,15 @@ public class PageBase {
      * @param locator The By locator to find the element.
      */
     public void waitForElement(By locator) {
-        wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-        wait.until(ExpectedConditions.presenceOfElementLocated(locator));
+        Wait<WebDriver> fluentWait = new FluentWait<>(driver)
+                .withTimeout(Duration.ofSeconds(10))
+                .pollingEvery(Duration.ofMillis(500))
+                .ignoring(NoSuchElementException.class)
+                .ignoring(StaleElementReferenceException.class);
+        fluentWait.until(ExpectedConditions.visibilityOfElementLocated(locator));
+        fluentWait.until(driver -> driver.findElement(locator));
     }
+
 
     /**
      * Waits for a web element to be clickable.
@@ -50,12 +57,18 @@ public class PageBase {
      */
     protected void waitForClickable(By locator) {
         try {
-            new WebDriverWait(driver, Duration.ofSeconds(10))
-                    .until(ExpectedConditions.elementToBeClickable(locator));
+            Wait<WebDriver> fluentWait = new FluentWait<>(driver)
+                    .withTimeout(Duration.ofSeconds(10))
+                    .pollingEvery(Duration.ofMillis(500))
+                    .ignoring(NoSuchElementException.class)
+                    .ignoring(StaleElementReferenceException.class);
+
+            fluentWait.until(ExpectedConditions.elementToBeClickable(locator));
         } catch (TimeoutException e) {
             System.out.println("Element not clickable: " + locator);
         }
     }
+
 
     /**
      * Gets the text of a web element located by the specified locator.
@@ -74,6 +87,11 @@ public class PageBase {
     public void click(By locator) {
         driver.findElement(locator).click();
     }
+
+    public boolean isElementDisplayed(By locator) {
+        return driver.findElement(locator).isDisplayed();
+    }
+
     String randomString(int length) {
         if (length <= 0) return "";
         java.security.SecureRandom rnd = new java.security.SecureRandom();
@@ -84,13 +102,28 @@ public class PageBase {
         return sb.toString();
     }
 
-    public static class RandomAddressGenerator {
-        public static String generateStreet() {
-            return "Street-" + UUID.randomUUID().toString().substring(0, 8);
-        }
+    public static String generateStreet() {
+        return "Street-" + UUID.randomUUID().toString().substring(0, 8);
+    }
     }
 
 
+    public void uploadFilesByRobot(String filePath) throws AWTException, InterruptedException {
+        Robot robot = new Robot();
+        robot.delay(1000);
+        StringSelection stringSelection = new StringSelection(filePath);
+        Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+        clipboard.setContents(stringSelection, null);
+        robot.delay(1000);
+        robot.keyPress(KeyEvent.VK_CONTROL);
+        robot.keyPress(KeyEvent.VK_V);
+        robot.keyRelease(KeyEvent.VK_V);
+        robot.keyRelease(KeyEvent.VK_CONTROL);
+        robot.delay(500);
+        robot.keyPress(KeyEvent.VK_ENTER);
+        robot.keyRelease(KeyEvent.VK_ENTER);
+        System.out.println("File path was successfully sent to the Windows upload popup.");
+    }
 
 
     public void printAllCookies() {
@@ -101,5 +134,6 @@ public class PageBase {
         }
         System.out.println("=======================");
     }
+
 
 }

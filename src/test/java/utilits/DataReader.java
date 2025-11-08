@@ -1,5 +1,3 @@
-package utils;
-
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
@@ -8,7 +6,7 @@ import java.io.Reader;
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 
-public class DataReader {
+public  class DataReader {
     /**
      * Reads a JSON object from a resource file.
      *

@@ -1,0 +1,12 @@
+{
+  "userName": "Admin",
+  "passWord": "admin123",
+  "city": "New-Cairo",
+  "state": "Cairo,Governorate",
+  "zip": "21532",
+  "country": "Egypt",
+  "homePhone": "03-1234567",
+  "mobile": "01012345678",
+  "workPhone": "03-7654321"
+
+}
