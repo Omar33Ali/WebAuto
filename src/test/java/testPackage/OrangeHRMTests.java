@@ -1,5 +1,4 @@
 package testPackage;
-
 import base.TestBase;
 import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
@@ -8,10 +7,8 @@ import pages.ContactDetailsPage;
 import pages.HomePage;
 import pages.JobDetails;
 import utilits.ConfigReader;
-
 import java.awt.*;
 import java.util.List;
-
 import static base.PageBase.generateStreet;
 
 

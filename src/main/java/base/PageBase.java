@@ -1,19 +1,21 @@
-package pages;
+package base;
+
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.Wait;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import java.time.Duration;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+
 import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.awt.event.KeyEvent;
-public class PageBase {
+import java.time.Duration;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 
+public class PageBase {
     protected WebDriver driver;
     protected WebDriverWait wait;
 
@@ -92,7 +94,7 @@ public class PageBase {
         return driver.findElement(locator).isDisplayed();
     }
 
-    String randomString(int length) {
+    public String randomString(int length) {
         if (length <= 0) return "";
         java.security.SecureRandom rnd = new java.security.SecureRandom();
         StringBuilder sb = new StringBuilder(length);
@@ -105,8 +107,6 @@ public class PageBase {
     public static String generateStreet() {
         return "Street-" + UUID.randomUUID().toString().substring(0, 8);
     }
-    }
-
 
     public void uploadFilesByRobot(String filePath) throws AWTException, InterruptedException {
         Robot robot = new Robot();
@@ -124,7 +124,22 @@ public class PageBase {
         robot.keyRelease(KeyEvent.VK_ENTER);
         System.out.println("File path was successfully sent to the Windows upload popup.");
     }
+    public void selectDropdownOption(WebDriver driver, By dropdownLocator, String visibleText) {
+        WebElement dropdown = new WebDriverWait(driver, Duration.ofSeconds(10))
+                .until(ExpectedConditions.elementToBeClickable(dropdownLocator));
+        dropdown.click();
 
+        if (visibleText != null) {
+            By optionLocator = By.xpath("//div[@role='option' and normalize-space()='" + visibleText + "']");
+            WebElement option = new WebDriverWait(driver, Duration.ofSeconds(5))
+                    .until(ExpectedConditions.elementToBeClickable(optionLocator));
+            option.click();
+        } else {
+            // Select first available option
+            List<WebElement> options = driver.findElements(By.xpath("//div[@role='option']"));
+            if (!options.isEmpty()) options.get(0).click();
+        }
+    }
 
     public void printAllCookies() {
         Set<Cookie> cookies = driver.manage().getCookies();
@@ -137,3 +152,5 @@ public class PageBase {
 
 
 }
+
+
